@@ -43,6 +43,7 @@ bool Game::Init()
 	Player.Init(20, WINDOW_HEIGHT >> 1, 104, 82, 5);
 	idx_shot = 0;
 	idx_enemy_shot = 0;
+	Life.Init(20, 0, 104, 82, NULL);//Lin
 	int w;
 	SDL_QueryTexture(img_background, NULL, NULL, &w, NULL);
 	Scene.Init(0, 0, w, WINDOW_HEIGHT, 4);
@@ -83,6 +84,11 @@ bool Game::LoadImages()
 		return false;
 	}
 
+	img_life = SDL_CreateTextureFromSurface(Renderer, IMG_Load("life.png"));
+	if (img_life == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
 
 	return true;
 }
@@ -92,6 +98,7 @@ void Game::Release()
 	SDL_DestroyTexture(img_background);
 	SDL_DestroyTexture(img_player);
 	SDL_DestroyTexture(img_shot);
+	SDL_DestroyTexture(img_life);
 	IMG_Quit();
 	
 	//Clean up all SDL initialized subsystems
@@ -127,6 +134,7 @@ bool Game::Update()
 	int fx = 0, fy = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
+	if (keys[SDL_SCANCODE_J] == KEY_DOWN) vida -= 1;//Lin Si pulsa j resta vida
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	fy = -1;
 	if (keys[SDL_SCANCODE_DOWN] == KEY_REPEAT)	fy = 1;
 	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)	fx = -1;
@@ -229,16 +237,26 @@ void Game::Draw()
 	SDL_RenderCopy(Renderer, img_background, NULL, &rc);
 	
 	//Draw player
-	Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-	SDL_RenderCopy(Renderer, img_player, NULL, &rc);
-	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+		//Draw player
+	if (vida == 0) {}
+	else {
+		Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+		SDL_RenderCopy(Renderer, img_player, NULL, &rc);
+		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+	}
 
 
 	Enemies[0][0].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 	SDL_RenderCopy(Renderer, img_enemy, NULL, &rc);
 
 
-
+	//Draw Life
+	Life.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	for (int i = 0; i < vida; i++)
+	{
+		SDL_RenderCopy(Renderer, img_life, NULL, &rc);
+		rc.x += rc.w;  // Move the rect to the right by its width
+	}
 	
 	//Draw shots
 	for (int i = 0; i < MAX_SHOTS; ++i)

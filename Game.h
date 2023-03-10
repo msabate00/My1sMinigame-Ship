@@ -33,13 +33,14 @@ public:
 private:
 	SDL_Window *Window;
 	SDL_Renderer *Renderer;
-	SDL_Texture *img_background, *img_player, *img_shot, *img_enemy;
+	SDL_Texture *img_background, *img_player, *img_shot, *img_enemy, * img_life;
 
-	Entity Player, Shots[MAX_SHOTS], Scene, Enemies[MAX_ROUNDS][MAX_ENEMIES], EnemyShoot[MAX_SHOTS];
+	Entity Player, Shots[MAX_SHOTS], Scene, Enemies[MAX_ROUNDS][MAX_ENEMIES], EnemyShoot[MAX_SHOTS], Life;
 	int idx_shot, idx_enemy_shot;
 
 	bool god_mode;
 
+	int vida = 3;
 	enum KEY_STATE { KEY_IDLE, KEY_DOWN, KEY_REPEAT, KEY_UP	};
 	KEY_STATE keys[MAX_KEYS]; 
 };
