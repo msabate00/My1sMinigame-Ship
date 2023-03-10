@@ -5,6 +5,7 @@ Game::Game() {}
 Game::~Game(){}
 
 bool enemyMoveUp = true;
+bool ballToRight = true;
 int framecount = 0;
 bool canShoot = true;
 
@@ -82,6 +83,11 @@ bool Game::LoadImages()
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
+	img_ball = SDL_CreateTextureFromSurface(Renderer, IMG_Load("ball.png"));
+	if (img_ball == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
 
 	img_life = SDL_CreateTextureFromSurface(Renderer, IMG_Load("life.png"));
 	if (img_life == NULL) {
@@ -97,6 +103,8 @@ void Game::Release()
 	SDL_DestroyTexture(img_background);
 	SDL_DestroyTexture(img_player);
 	SDL_DestroyTexture(img_shot);
+	SDL_DestroyTexture(img_enemy);
+	SDL_DestroyTexture(img_ball);
 	SDL_DestroyTexture(img_life);
 	IMG_Quit();
 	
@@ -144,10 +152,10 @@ bool Game::Update()
 		Player.GetRect(&x, &y, &w, &h);
 		//size: 56x20
 		//offset from player: dx, dy = [(29, 3), (29, 59)]
-
-		Shots[idx_shot].Init(x , y + (Player.GetHeight()/2)-10 , 56, 20, 10);
-		idx_shot++;
-		idx_shot %= MAX_SHOTS;
+		
+		Ball.Init(x+Player.GetWidth() , y + (Player.GetHeight()/2)-15 , 30, 30, 10);
+		//idx_shot++;
+		//idx_shot %= MAX_SHOTS;
 		canShoot = false;
 		/*Shots[idx_shot].Init(x + 29, y + 59, 56, 20, 10);
 		idx_shot++;
@@ -189,6 +197,11 @@ bool Game::Update()
 	else {
 		Enemy.Move(0, -1);
 	}
+
+
+
+	//Ball logic
+	Ball.Move(1,1);
 
 	//ESTO HACE QUE EL ENEMIGO DISPARE, PARA EL PONG NO HACE FALTA
 	/*for (int i = 0; i < MAX_SHOTS; ++i)
@@ -265,7 +278,15 @@ void Game::Draw()
 	}
 	
 	//Draw shots
-	for (int i = 0; i < MAX_SHOTS; ++i)
+
+	if (Ball.IsAlive()) {
+		Ball.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+		SDL_RenderCopy(Renderer, img_ball, NULL, &rc);
+		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+	}
+
+
+	/*for (int i = 0; i < MAX_SHOTS; ++i)
 	{
 		if (Shots[i].IsAlive())
 		{
@@ -273,7 +294,7 @@ void Game::Draw()
 			SDL_RenderCopy(Renderer, img_shot, NULL, &rc);
 			if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 		}
-	}
+	}*/
 
 	/*//Draw enemy shots, no creo que nos haga falta
 	for (int i = 0; i < MAX_SHOTS; ++i)
