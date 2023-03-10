@@ -40,6 +40,11 @@ int Entity::GetHeight()
 {
 	return height;
 }
+int Entity::GetSpeed() {
+	return this->speed;
+}
+
+
 void Entity::SetX(int posx)
 {
 	x = posx;
@@ -48,6 +53,11 @@ void Entity::SetY(int posy)
 {
 	y = posy;
 }
+
+void Entity::SetSpeed(int speed) {
+	this->speed = speed;
+}
+
 void Entity::ShutDown()
 {
 	is_alive = false;

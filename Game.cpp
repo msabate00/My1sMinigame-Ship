@@ -153,7 +153,7 @@ bool Game::Update()
 		//size: 56x20
 		//offset from player: dx, dy = [(29, 3), (29, 59)]
 		
-		Ball.Init(x+Player.GetWidth() , y + (Player.GetHeight()/2)-15 , 30, 30, 10);
+		Ball.Init(x+Player.GetWidth() , y + (Player.GetHeight()/2)-15 , 30, 30, 6);
 		//idx_shot++;
 		//idx_shot %= MAX_SHOTS;
 		canShoot = false;
@@ -192,16 +192,16 @@ bool Game::Update()
 		enemyMoveUp = true;
 	}
 	if (enemyMoveUp) {
-		Enemy.Move(0, 1);
+		//Enemy.Move(0, 1);
 	}
 	else {
-		Enemy.Move(0, -1);
+		//Enemy.Move(0, -1);
 	}
-
+	Enemy.Move(0, 0);
 
 
 	//Ball logic
-	Ball.Move(1,1);
+	Ball.Move(1,0);
 
 	//ESTO HACE QUE EL ENEMIGO DISPARE, PARA EL PONG NO HACE FALTA
 	/*for (int i = 0; i < MAX_SHOTS; ++i)
