@@ -195,12 +195,12 @@ bool Game::Update()
 		idx_enemy_shot %= MAX_SHOTS;
 	}
 	idx_enemy_shot = 0;
-	for (int i = 0; i < MAX_SHOTS; i++) {
+	/*for (int i = 0; i < MAX_SHOTS; i++) {
 		if (Player.Collide(EnemyShoot[idx_enemy_shot])) {
 			
 		}
 		idx_enemy_shot++;
-	}
+	}*/
 	
 	
 
