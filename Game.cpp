@@ -6,6 +6,7 @@ Game::~Game(){}
 
 int enemyroundIndex = MAX_ROUNDS;
 int enemyIndex = MAX_ENEMIES;
+bool enemyMoveUp = true;
 
 bool Game::Init()
 {
@@ -159,6 +160,20 @@ bool Game::Update()
 
 	//Enemy logic
 
+	if (Enemies[0][0].GetY() + Enemies[0][0].GetHeight() >= WINDOW_HEIGHT && enemyMoveUp == true ) {
+		enemyMoveUp = false;
+	}
+	else if(Enemies[0][0].GetY() <= 0 && enemyMoveUp == false){
+		enemyMoveUp = true;
+	}
+	if (enemyMoveUp) {
+		Enemies[0][0].Move(0, 1);
+	}
+	else {
+		Enemies[0][0].Move(0, -1);
+	}
+
+	
 
 	
 		
