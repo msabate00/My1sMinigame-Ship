@@ -32,6 +32,14 @@ int Entity::GetY()
 {
 	return y;
 }
+int Entity::GetDX()
+{
+	return dx;
+}
+int Entity::GetDY()
+{
+	return dy;
+}
 int Entity::GetWidth()
 {
 	return width;
@@ -53,6 +61,14 @@ void Entity::SetY(int posy)
 {
 	y = posy;
 }
+void Entity::SetDX(int dir_x)
+{
+	dx = dir_x;
+}
+void Entity::SetDY(int dir_y)
+{
+	dy = dir_y;
+}
 
 void Entity::SetSpeed(int speed) {
 	this->speed = speed;
@@ -67,11 +83,17 @@ bool Entity::IsAlive()
 	return is_alive;
 }
 
-void Entity::Move(int dx, int dy)
+void Entity::Move()
 {
-	x += dx * speed;
-	y += dy * speed;
+		
+	x += this->dx * speed;
+	y += this->dy * speed;
 }
+void Entity::SetDir(int dx, int dy) {
+	this->dx = dx;
+	this->dy = dy;
+}
+
 
 bool Entity::Collide(Entity other) {
 

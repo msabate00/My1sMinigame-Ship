@@ -6,6 +6,7 @@ Game::~Game(){}
 
 bool enemyMoveUp = true;
 bool ballToRight = true;
+int ballDirx = 1, ballDirY = 1;
 int framecount = 0;
 bool canShoot = true;
 
@@ -166,11 +167,14 @@ bool Game::Update()
 
 	//Logic
 	//Scene scroll
-	Scene.Move(-1, 0);
+	Scene.SetDir(-1, 0);
+	Scene.Move();
 	if (Scene.GetX() <= -Scene.GetWidth())	Scene.SetX(0);
 	//Player update
-	Player.Move(fx, fy);
+	Player.SetDir(fx, fy);
+	Player.Move();
 	//Shots update
+	/* EN PRINCIPIO NO HACE FALTA
 	for (int i = 0; i < MAX_SHOTS; ++i)
 	{
 		if (Shots[i].IsAlive())
@@ -182,7 +186,7 @@ bool Game::Update()
 			}
 		}
 	}
-
+	*/
 	//Enemy logic
 
 	if (Enemy.GetY() + Enemy.GetHeight() >= WINDOW_HEIGHT && enemyMoveUp == true ) {
@@ -197,12 +201,17 @@ bool Game::Update()
 	else {
 		//Enemy.Move(0, -1);
 	}
-	Enemy.Move(0, 0);
+	Enemy.SetDir(0, 0);
+	Enemy.Move();
 
 
 	//Ball logic
-	Ball.Move(1,1);
+	Ball.SetDir(ballDirx,ballDirY);
+	Ball.Move();
 
+	if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT) || (Ball.GetY() + Ball.GetHeight() < 0)) {
+		ballDirY = -ballDirY;
+	}
 
 
 
