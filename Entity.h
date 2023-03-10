@@ -8,11 +8,15 @@ public:
 	void Init(int posx, int posy, int w, int h, int s);
 	void GetRect(int *posx, int *posy, int *w, int *h);
 	void SetX(int posx);
+	void SetY(int posy);
 	int  GetX();
+	int  GetY();
 	int  GetWidth();
+	int  GetHeight();
 	void ShutDown(); 
 	bool IsAlive();
 	void Move(int dx, int dy);
+	void Collide(Entity other);
 
 private:
 	int x, y;

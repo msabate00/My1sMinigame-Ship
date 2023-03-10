@@ -13,6 +13,8 @@
 #define WINDOW_HEIGHT	768
 #define MAX_KEYS		256
 #define MAX_SHOTS		32
+#define MAX_ROUNDS		3
+#define MAX_ENEMIES		3
 
 class Game
 {
@@ -33,7 +35,7 @@ private:
 	SDL_Renderer *Renderer;
 	SDL_Texture *img_background, *img_player, *img_shot;
 
-	Entity Player, Shots[MAX_SHOTS], Scene;
+	Entity Player, Shots[MAX_SHOTS], Scene, Enemies[MAX_ROUNDS][MAX_ENEMIES];
 	int idx_shot;
 
 	bool god_mode;
