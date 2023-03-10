@@ -257,7 +257,7 @@ void Game::Draw()
 		}
 	}
 
-	//Draw enemy shots
+	/*//Draw enemy shots, no creo que nos haga falta
 	for (int i = 0; i < MAX_SHOTS; ++i)
 	{
 		if (EnemyShoot[i].IsAlive())
@@ -266,7 +266,7 @@ void Game::Draw()
 			SDL_RenderCopy(Renderer, img_shot, NULL, &rc);
 			//if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 		}
-	}
+	}*/
 
 	//Update screen
 	SDL_RenderPresent(Renderer);
