@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 
+
 Entity::Entity()
 {
 	is_alive = false;
@@ -88,6 +89,7 @@ void Entity::Move()
 		
 	x += this->dx * speed;
 	y += this->dy * speed;
+	
 }
 void Entity::SetDir(int dx, int dy) {
 	this->dx = dx;
