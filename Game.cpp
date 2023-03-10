@@ -201,7 +201,12 @@ bool Game::Update()
 
 
 	//Ball logic
-	Ball.Move(1,0);
+	Ball.Move(1,1);
+
+
+
+
+
 
 	//ESTO HACE QUE EL ENEMIGO DISPARE, PARA EL PONG NO HACE FALTA
 	/*for (int i = 0; i < MAX_SHOTS; ++i)
