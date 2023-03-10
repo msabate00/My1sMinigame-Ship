@@ -4,10 +4,9 @@
 Game::Game() {}
 Game::~Game(){}
 
-int enemyroundIndex = MAX_ROUNDS;
-int enemyIndex = MAX_ENEMIES;
 bool enemyMoveUp = true;
 int framecount = 0;
+bool canShoot = true;
 
 bool Game::Init()
 {
@@ -50,7 +49,7 @@ bool Game::Init()
 
 	
 	//Enemigos
-	Enemies[0][0].Init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 104, 104, 6);
+	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 104, 6);
 
 	return true;
 }
@@ -129,20 +128,22 @@ bool Game::Update()
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	fy = -1;
 	if (keys[SDL_SCANCODE_DOWN] == KEY_REPEAT)	fy = 1;
-	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)	fx = -1;
-	if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)	fx = 1;
-	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
+	//if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)	fx = -1;
+	//if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)	fx = 1;
+	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN && canShoot)
 	{
 		int x, y, w, h;
 		Player.GetRect(&x, &y, &w, &h);
 		//size: 56x20
 		//offset from player: dx, dy = [(29, 3), (29, 59)]
-		Shots[idx_shot].Init(x + 29, y + 3, 56, 20, 10);
+
+		Shots[idx_shot].Init(x , y + (Player.GetHeight()/2)-10 , 56, 20, 10);
 		idx_shot++;
 		idx_shot %= MAX_SHOTS;
-		Shots[idx_shot].Init(x + 29, y + 59, 56, 20, 10);
+		canShoot = false;
+		/*Shots[idx_shot].Init(x + 29, y + 59, 56, 20, 10);
 		idx_shot++;
-		idx_shot %= MAX_SHOTS;
+		idx_shot %= MAX_SHOTS;*/
 
 		
 	}
@@ -159,26 +160,30 @@ bool Game::Update()
 		if (Shots[i].IsAlive())
 		{
 			Shots[i].Move(1, 0);
-			if (Shots[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
+			if (Shots[i].GetX() > WINDOW_WIDTH || Shots[i].GetX() < 0) {
+				canShoot = true;
+				Shots[i].ShutDown();
+			}
 		}
 	}
 
 	//Enemy logic
 
-	if (Enemies[0][0].GetY() + Enemies[0][0].GetHeight() >= WINDOW_HEIGHT && enemyMoveUp == true ) {
+	if (Enemy.GetY() + Enemy.GetHeight() >= WINDOW_HEIGHT && enemyMoveUp == true ) {
 		enemyMoveUp = false;
 	}
-	else if(Enemies[0][0].GetY() <= 0 && enemyMoveUp == false){
+	else if(Enemy.GetY() <= 0 && enemyMoveUp == false){
 		enemyMoveUp = true;
 	}
 	if (enemyMoveUp) {
-		Enemies[0][0].Move(0, 1);
+		Enemy.Move(0, 1);
 	}
 	else {
-		Enemies[0][0].Move(0, -1);
+		Enemy.Move(0, -1);
 	}
 
-	for (int i = 0; i < MAX_SHOTS; ++i)
+	//ESTO HACE QUE EL ENEMIGO DISPARE, PARA EL PONG NO HACE FALTA
+	/*for (int i = 0; i < MAX_SHOTS; ++i)
 	{
 		if (EnemyShoot[i].IsAlive())
 		{
@@ -189,12 +194,13 @@ bool Game::Update()
 
 	if (framecount % 100 == 0) {
 		int x, y, w, h;
-		Enemies[0][0].GetRect(&x, &y, &w, &h);
+		Enemy.GetRect(&x, &y, &w, &h);
 		EnemyShoot[idx_enemy_shot].Init(x - 29, y, 56, 20, 10);
 		idx_enemy_shot++;
 		idx_enemy_shot %= MAX_SHOTS;
 	}
 	idx_enemy_shot = 0;
+	*/
 	/*for (int i = 0; i < MAX_SHOTS; i++) {
 		if (Player.Collide(EnemyShoot[idx_enemy_shot])) {
 			
@@ -234,7 +240,7 @@ void Game::Draw()
 	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 
 
-	Enemies[0][0].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	Enemy.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 	SDL_RenderCopy(Renderer, img_enemy, NULL, &rc);
 
 
