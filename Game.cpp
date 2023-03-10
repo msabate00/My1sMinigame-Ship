@@ -5,7 +5,7 @@ Game::Game() {}
 Game::~Game(){}
 
 bool enemyMoveUp = true;
-bool ballToRight = true;
+bool ballToEnemy = true;
 int ballDirX = 1, ballDirY = 1;
 int framecount = 0;
 bool canShoot = true;
@@ -246,24 +246,52 @@ bool Game::Update()
 	PlayerRect.w = w;
 	PlayerRect.h = h;
 
-	if (SDL_HasIntersection(&BallRect, &EnemyRect) && framecount > 20 || SDL_HasIntersection(&BallRect, &PlayerRect) && framecount > 20) {
+	
+
+
+	//Ball logic
+	if ((SDL_HasIntersection(&BallRect, &EnemyRect) || SDL_HasIntersection(&BallRect, &PlayerRect)) && framecount > 20 ) {
 		
+		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
+			if (Ball.GetY() + (Ball.GetHeight() / 2) <= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
+				ballDirY = -1;
+			}
+			else {
+				ballDirY = 1;
+			}
+		}
+		else {
+			if (SDL_HasIntersection(&BallRect, &PlayerRect)) {
+				if (Ball.GetY() + (Ball.GetHeight() / 2) <= Player.GetY() + (Player.GetHeight() / 2)) {
+					ballDirY = -1;
+				}
+				else {
+					ballDirY = 1;
+				}
+			}
 		
-			ballToRight = !ballToRight;
-			framecount = 0;
+		}
+
+
+		ballToEnemy = !ballToEnemy;
+		ballDirX = -ballDirX;
+		framecount = 0;
 
 	}
 	else {
 
-		//Ball logic
 		
-		if (ballToRight) {
-			Ball.Move(1, 0);
+
+		Ball.SetDir(ballDirX, ballDirY);
+		Ball.Move();
+		if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT) || (Ball.GetY() + Ball.GetHeight() < 0)) {
+			ballDirY = -ballDirY;
 		}
-		else
-		{
-			Ball.Move(-1, 0);
+		if (Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) {
+			Ball.ShutDown();
+			canShoot = true;
 		}
+
 		
 	}
 
