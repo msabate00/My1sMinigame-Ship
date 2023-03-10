@@ -7,6 +7,7 @@ Game::~Game(){}
 int enemyroundIndex = MAX_ROUNDS;
 int enemyIndex = MAX_ENEMIES;
 bool enemyMoveUp = true;
+int framecount = 0;
 
 bool Game::Init()
 {
@@ -41,6 +42,7 @@ bool Game::Init()
 	//size: 104x82
 	Player.Init(20, WINDOW_HEIGHT >> 1, 104, 82, 5);
 	idx_shot = 0;
+	idx_enemy_shot = 0;
 	int w;
 	SDL_QueryTexture(img_background, NULL, NULL, &w, NULL);
 	Scene.Init(0, 0, w, WINDOW_HEIGHT, 4);
@@ -117,6 +119,7 @@ bool Game::Input()
 }
 bool Game::Update()
 {
+	framecount++;
 	//Read Input
 	if (!Input())	return true;
 
@@ -140,6 +143,8 @@ bool Game::Update()
 		Shots[idx_shot].Init(x + 29, y + 59, 56, 20, 10);
 		idx_shot++;
 		idx_shot %= MAX_SHOTS;
+
+		
 	}
 
 	//Logic
@@ -172,6 +177,25 @@ bool Game::Update()
 	else {
 		Enemies[0][0].Move(0, -1);
 	}
+
+	for (int i = 0; i < MAX_SHOTS; ++i)
+	{
+		if (EnemyShoot[i].IsAlive())
+		{
+			EnemyShoot[i].Move(-1, 0);
+			if (EnemyShoot[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
+		}
+	}
+
+	if (framecount % 100 == 0) {
+		int x, y, w, h;
+		Enemies[0][0].GetRect(&x, &y, &w, &h);
+		EnemyShoot[idx_enemy_shot].Init(x - 29, y, 56, 20, 10);
+		idx_enemy_shot++;
+		idx_enemy_shot %= MAX_SHOTS;
+	}
+
+	
 
 	
 
@@ -215,6 +239,17 @@ void Game::Draw()
 			Shots[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 			SDL_RenderCopy(Renderer, img_shot, NULL, &rc);
 			if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+		}
+	}
+
+	//Draw enemy shots
+	for (int i = 0; i < MAX_SHOTS; ++i)
+	{
+		if (EnemyShoot[i].IsAlive())
+		{
+			EnemyShoot[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+			SDL_RenderCopy(Renderer, img_shot, NULL, &rc);
+			//if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 		}
 	}
 

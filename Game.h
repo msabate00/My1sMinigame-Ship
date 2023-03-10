@@ -35,8 +35,8 @@ private:
 	SDL_Renderer *Renderer;
 	SDL_Texture *img_background, *img_player, *img_shot, *img_enemy;
 
-	Entity Player, Shots[MAX_SHOTS], Scene, Enemies[MAX_ROUNDS][MAX_ENEMIES];
-	int idx_shot;
+	Entity Player, Shots[MAX_SHOTS], Scene, Enemies[MAX_ROUNDS][MAX_ENEMIES], EnemyShoot[MAX_SHOTS];
+	int idx_shot, idx_enemy_shot;
 
 	bool god_mode;
 
