@@ -8,6 +8,7 @@ bool enemyMoveUp = true;
 bool ballToRight = true;
 int framecount = 0;
 bool canShoot = true;
+bool iscollide = false;
 
 bool Game::Init()
 {
@@ -83,8 +84,8 @@ bool Game::LoadImages()
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
-	img_ball = SDL_CreateTextureFromSurface(Renderer, IMG_Load("ball.png"));
-	if (img_ball == NULL) {
+	EnemyRect = SDL_CreateTextureFromSurface(Renderer, IMG_Load("ball.png"));
+	if (EnemyRect == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
@@ -104,7 +105,7 @@ void Game::Release()
 	SDL_DestroyTexture(img_player);
 	SDL_DestroyTexture(img_shot);
 	SDL_DestroyTexture(img_enemy);
-	SDL_DestroyTexture(img_ball);
+	SDL_DestroyTexture(EnemyRect);
 	SDL_DestroyTexture(img_life);
 	IMG_Quit();
 	
@@ -200,8 +201,52 @@ bool Game::Update()
 	Enemy.Move(0, 0);
 
 
-	//Ball logic
-	Ball.Move(1,0);
+	
+
+
+	int x, y, w, h;
+	Ball.GetRect(&x, &y, &w, &h);
+	SDL_Rect BallRect;
+	BallRect.x = x; 
+	BallRect.y = y; 
+	BallRect.w = w; 
+	BallRect.h = h; 
+
+
+	Enemy.GetRect(&x, &y, &w, &h);
+	SDL_Rect EnemyRect;
+	EnemyRect.x = x;
+	EnemyRect.y = y;
+	EnemyRect.w = w;
+	EnemyRect.h = h;
+
+	Player.GetRect(&x, &y, &w, &h);
+	SDL_Rect PlayerRect;
+	PlayerRect.x = x;
+	PlayerRect.y = y;
+	PlayerRect.w = w;
+	PlayerRect.h = h;
+
+	if (SDL_HasIntersection(&BallRect, &EnemyRect) && framecount > 20 || SDL_HasIntersection(&BallRect, &PlayerRect) && framecount > 20) {
+		
+		
+			ballToRight = !ballToRight;
+			framecount = 0;
+
+	}
+	else {
+
+		//Ball logic
+		
+		if (ballToRight) {
+			Ball.Move(1, 0);
+		}
+		else
+		{
+			Ball.Move(-1, 0);
+		}
+		
+	}
 
 	//ESTO HACE QUE EL ENEMIGO DISPARE, PARA EL PONG NO HACE FALTA
 	/*for (int i = 0; i < MAX_SHOTS; ++i)
@@ -257,7 +302,9 @@ void Game::Draw()
 	
 	//Draw player
 		//Draw player
-	if (vida == 0) {}
+	if (vida <= 0) {
+	
+	}
 	else {
 		Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 		SDL_RenderCopy(Renderer, img_player, NULL, &rc);
@@ -279,12 +326,13 @@ void Game::Draw()
 	
 	//Draw shots
 
+
 	if (Ball.IsAlive()) {
 		Ball.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-		SDL_RenderCopy(Renderer, img_ball, NULL, &rc);
+		SDL_RenderCopy(Renderer, EnemyRect, NULL, &rc);
 		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 	}
-
+	
 
 	/*for (int i = 0; i < MAX_SHOTS; ++i)
 	{
