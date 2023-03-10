@@ -12,9 +12,7 @@
 #define WINDOW_WIDTH	1024
 #define WINDOW_HEIGHT	768
 #define MAX_KEYS		256
-#define MAX_SHOTS		32
-#define MAX_ROUNDS		3
-#define MAX_ENEMIES		3
+#define MAX_SHOTS		1
 
 class Game
 {
