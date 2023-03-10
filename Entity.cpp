@@ -63,13 +63,14 @@ void Entity::Move(int dx, int dy)
 	y += dy * speed;
 }
 
-void Entity::Collide(Entity other) {
+bool Entity::Collide(Entity other) {
 
 	if (this->GetX() >= other.GetX() && this->GetX() + this->GetWidth() <= other.GetX() + other.GetWidth()
 		&& this->GetY() <= other.GetY() && this->GetY() + this->GetHeight() >= other.GetY() + other.GetHeight()
 		) {
 	
-		//colisiona
+		return true;
 	
 	}
+	return false;
 }

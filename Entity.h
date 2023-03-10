@@ -16,7 +16,7 @@ public:
 	void ShutDown(); 
 	bool IsAlive();
 	void Move(int dx, int dy);
-	void Collide(Entity other);
+	bool Collide(Entity other);
 
 private:
 	int x, y;

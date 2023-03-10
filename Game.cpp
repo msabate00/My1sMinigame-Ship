@@ -194,7 +194,14 @@ bool Game::Update()
 		idx_enemy_shot++;
 		idx_enemy_shot %= MAX_SHOTS;
 	}
-
+	idx_enemy_shot = 0;
+	for (int i = 0; i < MAX_SHOTS; i++) {
+		if (Player.Collide(EnemyShoot[idx_enemy_shot])) {
+			
+		}
+		idx_enemy_shot++;
+	}
+	
 	
 
 	
@@ -229,6 +236,8 @@ void Game::Draw()
 
 	Enemies[0][0].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 	SDL_RenderCopy(Renderer, img_enemy, NULL, &rc);
+
+
 
 	
 	//Draw shots
