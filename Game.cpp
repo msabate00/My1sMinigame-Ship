@@ -4,6 +4,9 @@
 Game::Game() {}
 Game::~Game(){}
 
+int enemyroundIndex = MAX_ROUNDS;
+int enemyIndex = MAX_ENEMIES;
+
 bool Game::Init()
 {
 	//Initialize SDL with all subsystems
@@ -42,6 +45,10 @@ bool Game::Init()
 	Scene.Init(0, 0, w, WINDOW_HEIGHT, 4);
 	god_mode = false;
 
+	
+	//Enemigos
+	Enemies[0][0].Init(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 104, 104, 6);
+
 	return true;
 }
 bool Game::LoadImages()
@@ -66,6 +73,14 @@ bool Game::LoadImages()
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
+
+	img_enemy = SDL_CreateTextureFromSurface(Renderer, IMG_Load("nave_malo.png"));
+	if (img_enemy == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
+
+
 	return true;
 }
 void Game::Release()
@@ -141,6 +156,11 @@ bool Game::Update()
 			if (Shots[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
 		}
 	}
+
+	//Enemy logic
+
+
+	
 		
 	return false;
 }
@@ -166,6 +186,11 @@ void Game::Draw()
 	Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 	SDL_RenderCopy(Renderer, img_player, NULL, &rc);
 	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
+
+
+	Enemies[0][0].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	SDL_RenderCopy(Renderer, img_enemy, NULL, &rc);
+
 	
 	//Draw shots
 	for (int i = 0; i < MAX_SHOTS; ++i)
