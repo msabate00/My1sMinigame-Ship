@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include "SDL_mixer/include/SDL_mixer.h"
 
-#pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
+#pragma comment( lib, "SDL/libx86/SDL2.lib" )
+#pragma comment( lib, "SDL/libx86/SDL2main.lib" )
+
 Game::Game() {}
 Game::~Game(){}
 
@@ -60,7 +62,10 @@ bool Game::Init()
 
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+	Mix_Music* musica = Mix_LoadMUS("assets/stage1.ogg");
+	Mix_PlayMusic(musica, -1);
+
 	return true;
 }
 bool Game::LoadImages()
@@ -173,19 +178,22 @@ bool Game::Update()
 	}
 	if (keys[SDL_SCANCODE_K] == KEY_DOWN)
 	{
-		Mix_Music* musica = Mix_LoadMUS("assets/stage1.ogg");
-		if (musica == NULL)
+		//Mix_Music* musica = Mix_LoadMUS("assets/stage1.ogg");
+		Mix_Chunk* sonido = Mix_LoadWAV("assets/bip.wav");
+		if (sonido == NULL)
 		{
-			printf("Error al cargar la musica: %s\n", Mix_GetError());
+			printf("Error al cargar el sonido: %s\n", Mix_GetError());
 		}
 		else
 		{
-			if (Mix_PlayMusic(musica, -1) < 0)
+			if (Mix_PlayChannel(-1, sonido, 0) < 0)
 			{
-				printf("Error al cargar la msica: %s\n", Mix_GetError());
+				printf("Error al cargar el sonido: %s\n", Mix_GetError());
 			}
 		}
-		Mix_VolumeMusic(128);
+		//Mix_PlayMusic(musica, -1);
+		
+		
 		/*if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 			printf("Error al inicializar SDL_mixer: %s\n", Mix_GetError());
 			exit(1);
