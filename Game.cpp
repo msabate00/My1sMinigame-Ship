@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <math.h>
+#include <cmath>
 #include <stdio.h>
 #include "SDL_mixer/include/SDL_mixer.h"
 
@@ -338,6 +339,9 @@ bool Game::Update()
 		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
 			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
+
+			
+
 			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
 				ballDirY = -ballDirY;
 			}
@@ -348,23 +352,46 @@ bool Game::Update()
 		//Colision jugador
 		if (SDL_HasIntersection(&BallRect, &PlayerRect)) {
 
+
+			if ((Ball.GetY() + (Ball.GetHeight() / 2)) < (Player.GetY() + (Player.GetHeight() / 2))) {
+				ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
+			}
+			else {
+				ballDirY = -((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
+			}
+
 			//ballDirY = (Player.GetY()+(Player.GetHeight() / 2)) - (Ball.GetY() +(Ball.GetHeight() / 2));
-			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
+			/*ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 1) / (Ball.GetY() + Player.GetY());
 			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Player.GetY() + (Player.GetHeight() / 2)) {
 				ballDirY = -ballDirY;
-			}
+			}*/
 	
 		}
+
+		//PUNTO MEDIO JUGADOR
+		//(Player.GetY() + (Player.GetHeight() / 2))
+
+		//PUNTO MEDIO PELOTA
+		//(Ball.GetY() + (Ball.GetHeight() / 2))
+
 		
+
+
+
+		
+		if (ballDirY > 1) ballDirY = 1;
+		if (ballDirY < -1) ballDirY = -1;
 		
 
 		//Cambia la direccion de la bola
 		ballToEnemy = !ballToEnemy;
-
-		ballDirX = ballDirX + 1;
-		
-		//Cambia el movimiento de la bola
 		ballDirX = -ballDirX;
+
+		//Cambia la velocidad de la bola
+		ballDirX *= 1.05;
+		
+		
+		
 
 		//Resetea el hitFrameCount
 		hitFrameCount = 0;
@@ -375,15 +402,25 @@ bool Game::Update()
 		
 
 		//Si se sale por arriba o por abajo, invierte la velocidad vertical
-		if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT) || (Ball.GetY() + Ball.GetHeight() < 0)) {
-			ballDirY = -ballDirY * 1;
+		/*if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT) || (Ball.GetY() + Ball.GetHeight() < 0)) {
+			ballDirY = -ballDirY;
+		}*/
+		if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT)) {
+			Ball.SetY(WINDOW_HEIGHT - Ball.GetHeight());
+			ballDirY = -abs(ballDirY);
 		}
+		if ((Ball.GetY() < 0)) {
+			Ball.SetY(0);
+			ballDirY = abs(ballDirY);
+		}
+
 
 		//Si se sale por los lados, resetea la bola
 		if (Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) {
 			Ball.ShutDown();
 			canShoot = true;
 			ballDirX = 1;
+			ballDirY = 1;
 		}
 
 		//Pone su direccion
