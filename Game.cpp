@@ -11,7 +11,7 @@ Game::~Game(){}
 
 bool enemyMoveUp = true;
 bool ballToEnemy = true;
-int ballDirX = 1, ballDirY = 1;
+float ballDirX = 1, ballDirY = 1;
 int hitFrameCount = 0;
 bool canShoot = true;
 bool iscollide = false;
@@ -151,7 +151,7 @@ bool Game::Update()
 	if (!Input())	return true;
 
 	//Process Input
-	int fx = 0, fy = 0;
+	float fx = 0, fy = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
 	if (keys[SDL_SCANCODE_J] == KEY_DOWN) vida -= 1;//Lin Si pulsa j resta vida
@@ -308,29 +308,41 @@ bool Game::Update()
 		
 		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
+			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
+
+			//Ball.GetY() + Enemy.GetY() == 100;
+
+
+			/*
 			if (Ball.GetY() + (Ball.GetHeight() / 2) <= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
 				ballDirY = -1;
 			}
 			else {
 				ballDirY = 1;
-			}
+			}*/
 		}
-		else {
-			//Colision jugador
-			if (SDL_HasIntersection(&BallRect, &PlayerRect)) {
-				if (Ball.GetY() + (Ball.GetHeight() / 2) <= Player.GetY() + (Player.GetHeight() / 2)) {
-					ballDirY = -1;
-				}
-				else {
-					ballDirY = 1;
-				}
-			}
 		
+		//Colision jugador
+		if (SDL_HasIntersection(&BallRect, &PlayerRect)) {
+
+			//ballDirY = (Player.GetY()+(Player.GetHeight() / 2)) - (Ball.GetY() +(Ball.GetHeight() / 2));
+			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
+
+			/*if (Ball.GetY() + (Ball.GetHeight() / 2) <= Player.GetY() + (Player.GetHeight() / 2)) {
+				ballDirY = -1;
+			}
+			else {
+				ballDirY = 1;
+			}*/
 		}
+		
+		
 
 		//Cambia la direccion de la bola
 		ballToEnemy = !ballToEnemy;
 
+		ballDirX = ballDirX + 1;
+		printf("BallDirX: %d", ballDirX);
 		//Cambia el movimiento de la bola
 		ballDirX = -ballDirX;
 
@@ -351,6 +363,7 @@ bool Game::Update()
 		if (Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) {
 			Ball.ShutDown();
 			canShoot = true;
+			ballDirX = 1;
 		}
 
 		//Pone su direccion

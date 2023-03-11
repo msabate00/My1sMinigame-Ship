@@ -9,7 +9,7 @@ Entity::Entity()
 Entity::~Entity()
 {
 }
-void Entity::Init(int posx, int posy, int w, int h, int s) 
+void Entity::Init(float posx, float posy, float w, float h, float s)
 {
 	x = posx;
 	y = posy;
@@ -25,53 +25,53 @@ void Entity::GetRect(int *posx, int *posy, int *w, int *h)
 	*w = width;
 	*h = height;
 }
-int Entity::GetX()
+float Entity::GetX()
 {
 	return x;
 }
-int Entity::GetY()
+float Entity::GetY()
 {
 	return y;
 }
-int Entity::GetDX()
+float Entity::GetDX()
 {
 	return dx;
 }
-int Entity::GetDY()
+float Entity::GetDY()
 {
 	return dy;
 }
-int Entity::GetWidth()
+float Entity::GetWidth()
 {
 	return width;
 }
-int Entity::GetHeight()
+float Entity::GetHeight()
 {
 	return height;
 }
-int Entity::GetSpeed() {
+float Entity::GetSpeed() {
 	return this->speed;
 }
 
 
-void Entity::SetX(int posx)
+void Entity::SetX(float posx)
 {
 	x = posx;
 }
-void Entity::SetY(int posy)
+void Entity::SetY(float posy)
 {
 	y = posy;
 }
-void Entity::SetDX(int dir_x)
+void Entity::SetDX(float dir_x)
 {
 	dx = dir_x;
 }
-void Entity::SetDY(int dir_y)
+void Entity::SetDY(float dir_y)
 {
 	dy = dir_y;
 }
 
-void Entity::SetSpeed(int speed) {
+void Entity::SetSpeed(float speed) {
 	this->speed = speed;
 }
 
@@ -91,7 +91,7 @@ void Entity::Move()
 	y += this->dy * speed;
 	
 }
-void Entity::SetDir(int dx, int dy) {
+void Entity::SetDir(float dx, float dy) {
 	this->dx = dx;
 	this->dy = dy;
 }

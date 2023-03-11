@@ -33,7 +33,7 @@ public:
 private:
 	SDL_Window *Window;
 	SDL_Renderer *Renderer;
-	SDL_Texture *img_background, *img_player, *img_shot, *EnemyRect, *img_enemy, *img_life;
+	SDL_Texture *img_background = nullptr, *img_player = nullptr, *img_shot = nullptr, *EnemyRect = nullptr, *img_enemy = nullptr, *img_life = nullptr;
 
 	Entity Player, Shots[MAX_SHOTS], Scene, Enemy, Ball, Life, EnemyShoot[MAX_SHOTS];
 	int idx_shot, idx_enemy_shot;
