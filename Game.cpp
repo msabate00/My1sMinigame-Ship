@@ -60,10 +60,11 @@ bool Game::Init()
 	//Enemigos
 	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 104, 6);
 
+	// BACKGROUND MUSIC
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-	Mix_Music* musica = Mix_LoadMUS("assets/stage1.ogg");
+	Mix_Music* musica = Mix_LoadMUS("assets/Mozart.ogg");
 	Mix_PlayMusic(musica, -1);
 
 	return true;
@@ -173,6 +174,20 @@ bool Game::Update()
 		/*Shots[idx_shot].Init(x + 29, y + 59, 56, 20, 10);
 		idx_shot++;
 		idx_shot %= MAX_SHOTS;*/
+
+		// EFECTO DE SONIDO AL DISPARAR
+		Mix_Chunk* sonido = Mix_LoadWAV("assets/Sonido_Bola.wav");
+		if (sonido == NULL)
+		{
+			printf("Error al cargar el sonido: %s\n", Mix_GetError());
+		}
+		else
+		{
+			if (Mix_PlayChannel(-1, sonido, 0) < 0)
+			{
+				printf("Error al cargar el sonido: %s\n", Mix_GetError());
+			}
+		}
 
 		
 	}
@@ -306,6 +321,20 @@ bool Game::Update()
 	//Colision con jugador y enemigo
 	if ((SDL_HasIntersection(&BallRect, &EnemyRect) || SDL_HasIntersection(&BallRect, &PlayerRect)) && hitFrameCount > 20 ) {
 		
+		// EFECTO AL CHOCAR BOLA CON JUGADOR/ENEMIGO
+		Mix_Chunk* sonido = Mix_LoadWAV("assets/Sonido_Bola.wav");
+		if (sonido == NULL)
+		{
+			printf("Error al cargar el sonido: %s\n", Mix_GetError());
+		}
+		else
+		{
+			if (Mix_PlayChannel(-1, sonido, 0) < 0)
+			{
+				printf("Error al cargar el sonido: %s\n", Mix_GetError());
+			}
+		}
+
 		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
 			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
