@@ -1,6 +1,9 @@
 #include "Game.h"
 #include <math.h>
 #include <stdio.h>
+#include "SDL_mixer/include/SDL_mixer.h"
+
+#pragma comment( lib, "SDL_mixer/libx86/SDL2_mixer.lib" )
 Game::Game() {}
 Game::~Game(){}
 
@@ -55,6 +58,9 @@ bool Game::Init()
 	//Enemigos
 	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 104, 6);
 
+	int flags = MIX_INIT_OGG;
+	int init = Mix_Init(flags);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 	return true;
 }
 bool Game::LoadImages()
@@ -167,16 +173,30 @@ bool Game::Update()
 	}
 	if (keys[SDL_SCANCODE_K] == KEY_DOWN)
 	{
-		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		Mix_Music* musica = Mix_LoadMUS("assets/stage1.ogg");
+		if (musica == NULL)
+		{
+			printf("Error al cargar la musica: %s\n", Mix_GetError());
+		}
+		else
+		{
+			if (Mix_PlayMusic(musica, -1) < 0)
+			{
+				printf("Error al cargar la msica: %s\n", Mix_GetError());
+			}
+		}
+		Mix_VolumeMusic(128);
+		/*if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 			printf("Error al inicializar SDL_mixer: %s\n", Mix_GetError());
 			exit(1);
 		}
-
+		
 		Mix_Music* musica = Mix_LoadMUS("Game\assets\stage1.ogg");
 		Mix_PlayMusic(musica, -1); // Reproduce la musica en un loop infinito
 		Mix_VolumeMusic(128);
 		Mix_Chunk* efecto = Mix_LoadWAV("Game/assets/laser.wav");
 		//SDL_Delay(5000);
+		*/
 		//if (musica == NULL) {
 			//printf("Error al cargar la m sica: %s\n", Mix_GetError());
 			
