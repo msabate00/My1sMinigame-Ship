@@ -407,3 +407,4 @@ void Game::Draw()
 
 	SDL_Delay(10);	// 1000/10 = 100 fps max
 }
+
