@@ -172,18 +172,22 @@ bool Game::Update()
 			exit(1);
 		}
 
-		Mix_Music* musica = Mix_LoadMUS("Game/assets/stage1.ogg");
-		if (musica == NULL) {
-			printf("Error al cargar la m sica: %s\n", Mix_GetError());
-			Mix_Chunk* efecto = Mix_LoadWAV("Game/assets/laser.wav");
-			Mix_PlayMusic(musica, -1); // Reproduce la musica en un loop infinito
-			Mix_VolumeMusic(128);
-			//SDL_Delay(5000);
+		Mix_Music* musica = Mix_LoadMUS("Game\assets\stage1.ogg");
+		Mix_PlayMusic(musica, -1); // Reproduce la musica en un loop infinito
+		Mix_VolumeMusic(128);
+		Mix_Chunk* efecto = Mix_LoadWAV("Game/assets/laser.wav");
+		//SDL_Delay(5000);
+		//if (musica == NULL) {
+			//printf("Error al cargar la m sica: %s\n", Mix_GetError());
+			
+			
+			
+			
 			//Mix_PlayChannel(-1, efecto, 0); // Reproduce el efecto una vez	
 			//Mix_FreeMusic(musica);
 			//Mix_FreeChunk(efecto);
 			//Mix_CloseAudio();
-		}
+		//}
 	}
 
 	//Logic
