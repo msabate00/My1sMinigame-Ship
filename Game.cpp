@@ -175,6 +175,20 @@ bool Game::Update()
 		idx_shot++;
 		idx_shot %= MAX_SHOTS;*/
 
+		// EFECTO DE SONIDO AL DISPARAR
+		Mix_Chunk* sonido = Mix_LoadWAV("assets/Sonido_Bola.wav");
+		if (sonido == NULL)
+		{
+			printf("Error al cargar el sonido: %s\n", Mix_GetError());
+		}
+		else
+		{
+			if (Mix_PlayChannel(-1, sonido, 0) < 0)
+			{
+				printf("Error al cargar el sonido: %s\n", Mix_GetError());
+			}
+		}
+
 		
 	}
 	if (keys[SDL_SCANCODE_K] == KEY_DOWN)
