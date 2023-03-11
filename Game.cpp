@@ -338,17 +338,11 @@ bool Game::Update()
 		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
 			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
-
+			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
+				ballDirY = -ballDirY;
+			}
 			//Ball.GetY() + Enemy.GetY() == 100;
 
-
-			/*
-			if (Ball.GetY() + (Ball.GetHeight() / 2) <= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
-				ballDirY = -1;
-			}
-			else {
-				ballDirY = 1;
-			}*/
 		}
 		
 		//Colision jugador
@@ -356,13 +350,10 @@ bool Game::Update()
 
 			//ballDirY = (Player.GetY()+(Player.GetHeight() / 2)) - (Ball.GetY() +(Ball.GetHeight() / 2));
 			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
-
-			/*if (Ball.GetY() + (Ball.GetHeight() / 2) <= Player.GetY() + (Player.GetHeight() / 2)) {
-				ballDirY = -1;
+			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Player.GetY() + (Player.GetHeight() / 2)) {
+				ballDirY = -ballDirY;
 			}
-			else {
-				ballDirY = 1;
-			}*/
+	
 		}
 		
 		
@@ -371,7 +362,7 @@ bool Game::Update()
 		ballToEnemy = !ballToEnemy;
 
 		ballDirX = ballDirX + 1;
-		printf("BallDirX: %d", ballDirX);
+		
 		//Cambia el movimiento de la bola
 		ballDirX = -ballDirX;
 
