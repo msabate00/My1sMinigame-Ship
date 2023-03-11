@@ -7,7 +7,7 @@ Game::~Game(){}
 bool enemyMoveUp = true;
 bool ballToEnemy = true;
 int ballDirX = 1, ballDirY = 1;
-int framecount = 0;
+int hitFrameCount = 0;
 bool canShoot = true;
 bool iscollide = false;
 
@@ -135,7 +135,7 @@ bool Game::Input()
 }
 bool Game::Update()
 {
-	framecount++;
+	hitFrameCount++;
 	//Read Input
 	if (!Input())	return true;
 
@@ -250,8 +250,11 @@ bool Game::Update()
 
 
 	//Ball logic
-	if ((SDL_HasIntersection(&BallRect, &EnemyRect) || SDL_HasIntersection(&BallRect, &PlayerRect)) && framecount > 20 ) {
+
+	//Colision con jugador y enemigo
+	if ((SDL_HasIntersection(&BallRect, &EnemyRect) || SDL_HasIntersection(&BallRect, &PlayerRect)) && hitFrameCount > 20 ) {
 		
+		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
 			if (Ball.GetY() + (Ball.GetHeight() / 2) <= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
 				ballDirY = -1;
@@ -261,6 +264,7 @@ bool Game::Update()
 			}
 		}
 		else {
+			//Colision jugador
 			if (SDL_HasIntersection(&BallRect, &PlayerRect)) {
 				if (Ball.GetY() + (Ball.GetHeight() / 2) <= Player.GetY() + (Player.GetHeight() / 2)) {
 					ballDirY = -1;
@@ -272,25 +276,36 @@ bool Game::Update()
 		
 		}
 
-
+		//Cambia la direccion de la bola
 		ballToEnemy = !ballToEnemy;
+
+		//Cambia el movimiento de la bola
 		ballDirX = -ballDirX;
-		framecount = 0;
+
+		//Resetea el hitFrameCount
+		hitFrameCount = 0;
 
 	}
 	else {
 
 		
 
-		Ball.SetDir(ballDirX, ballDirY);
-		Ball.Move();
+		//Si se sale por arriba o por abajo, invierte la velocidad vertical
 		if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT) || (Ball.GetY() + Ball.GetHeight() < 0)) {
-			ballDirY = -ballDirY;
+			ballDirY = -ballDirY * 1;
 		}
+
+		//Si se sale por los lados, resetea la bola
 		if (Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) {
 			Ball.ShutDown();
 			canShoot = true;
 		}
+
+		//Pone su direccion
+		Ball.SetDir(ballDirX, ballDirY);
+
+		//Se mueve
+		Ball.Move();
 
 		
 	}
