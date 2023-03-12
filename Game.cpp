@@ -52,7 +52,7 @@ bool Game::Init()
 
 	//Init variables
 	//size: 104x82
-	Player.Init(20, WINDOW_HEIGHT >> 1, 104, 82, 7);
+	Player.Init(20, WINDOW_HEIGHT >> 1, 91, 105, 7);
 	idx_shot = 0;
 	idx_enemy_shot = 0;
 	Life.Init(20, 0, 104, 82, NULL);//Lin
@@ -63,7 +63,7 @@ bool Game::Init()
 
 	
 	//Enemigos
-	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 82, 7);
+	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 91, 105, 7);
 
 	// BACKGROUND MUSIC
 	int flags = MIX_INIT_OGG;
@@ -86,7 +86,7 @@ bool Game::LoadImages()
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
-	img_player = SDL_CreateTextureFromSurface(Renderer, IMG_Load("spaceship.png"));
+	img_player = SDL_CreateTextureFromSurface(Renderer, IMG_Load("spaceship_2.png"));
 	if (img_player == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
@@ -97,7 +97,7 @@ bool Game::LoadImages()
 		return false;
 	}
 
-	img_enemy = SDL_CreateTextureFromSurface(Renderer, IMG_Load("nave_malo.png"));
+	img_enemy = SDL_CreateTextureFromSurface(Renderer, IMG_Load("nave_malo_2.png"));
 	if (img_enemy == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
@@ -236,6 +236,7 @@ bool Game::Update()
 
 	//Enemy logic
 
+	//Si es controlado por la IA
 	if (iaController) {
 		Enemy.SetSpeed(4.685);
 
@@ -254,11 +255,19 @@ bool Game::Update()
 		else {
 			Enemy.SetY(Player.GetY());
 		}
-	}
+	} //Sino
 	else {
 		Enemy.SetSpeed(7);
 		Enemy.SetDir(ex, ey);
 		Enemy.Move();
+
+		//Ajuste de limites del movimiento
+		if (Enemy.GetY() < 0) {
+			Enemy.SetY(0);
+		}
+		else if (Enemy.GetY() > WINDOW_HEIGHT - Enemy.GetHeight()) {
+			Enemy.SetY(WINDOW_HEIGHT - Enemy.GetHeight());
+		}
 
 	}
 
