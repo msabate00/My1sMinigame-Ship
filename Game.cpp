@@ -52,7 +52,7 @@ bool Game::Init()
 
 	//Init variables
 	//size: 104x82
-	Player.Init(20, WINDOW_HEIGHT >> 1, 91, 105, 7);
+	Player.Init(20, WINDOW_HEIGHT >> 1, 110, 100, 7);
 	idx_shot = 0;
 	idx_enemy_shot = 0;
 	Life.Init(20, 0, 104, 82, NULL);//Lin
