@@ -63,7 +63,7 @@ bool Game::Init()
 
 	
 	//Enemigos
-	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 104, 6);
+	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 104, 7);
 
 	// BACKGROUND MUSIC
 	int flags = MIX_INIT_OGG;
@@ -108,11 +108,11 @@ bool Game::LoadImages()
 		return false;
 	}
 
-	img_life = SDL_CreateTextureFromSurface(Renderer, IMG_Load("life.png"));
+	/*img_life = SDL_CreateTextureFromSurface(Renderer, IMG_Load("life.png"));
 	if (img_life == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
-	}
+	}*/
 
 	return true;
 }
@@ -124,7 +124,7 @@ void Game::Release()
 	SDL_DestroyTexture(img_shot);
 	SDL_DestroyTexture(img_enemy);
 	SDL_DestroyTexture(EnemyRect);
-	SDL_DestroyTexture(img_life);
+	//SDL_DestroyTexture(img_life);
 	IMG_Quit();
 	
 	//Clean up all SDL initialized subsystems
@@ -256,6 +256,7 @@ bool Game::Update()
 		}
 	}
 	else {
+		Enemy.SetSpeed(7);
 		Enemy.SetDir(ex, ey);
 		Enemy.Move();
 
@@ -385,10 +386,22 @@ bool Game::Update()
 
 		//Si se sale por los lados, resetea la bola
 		if (Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) {
-			Ball.ShutDown();
-			canShoot = true;
-			ballDirX = 1;
-			ballDirY = 1;
+
+			if (!god_mode) {
+				Ball.ShutDown();
+				canShoot = true;
+				ballDirX = 1;
+				ballDirY = 1;
+			}
+			else {
+				ballDirX = -ballDirX;
+				Mix_Chunk* sonido = Mix_LoadWAV("assets/Sonido_Bola.wav");
+				if (Mix_PlayChannel(-1, sonido, 0) < 0)
+				{
+					printf("Error al cargar el sonido: %s\n", Mix_GetError());
+				}
+			}
+			
 		}
 
 		//Pone su direccion
@@ -436,15 +449,16 @@ void Game::Draw()
 
 	Enemy.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 	SDL_RenderCopy(Renderer, img_enemy, NULL, &rc);
+	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 
 
 	//Draw Life
-	Life.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	/*Life.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 	for (int i = 0; i < vida; i++)
 	{
 		SDL_RenderCopy(Renderer, img_life, NULL, &rc);
 		rc.x += rc.w;  // Move the rect to the right by its width
-	}
+	}*/
 	
 	//Draw shots
 
@@ -456,26 +470,11 @@ void Game::Draw()
 	}
 	
 
-	/*for (int i = 0; i < MAX_SHOTS; ++i)
-	{
-		if (Shots[i].IsAlive())
-		{
-			Shots[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-			SDL_RenderCopy(Renderer, img_shot, NULL, &rc);
-			if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
-		}
-	}*/
-
-	/*//Draw enemy shots, no creo que nos haga falta
-	for (int i = 0; i < MAX_SHOTS; ++i)
-	{
-		if (EnemyShoot[i].IsAlive())
-		{
-			EnemyShoot[i].GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-			SDL_RenderCopy(Renderer, img_shot, NULL, &rc);
-			//if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
-		}
-	}*/
+	if (god_mode) {
+	
+		SDL_RenderDrawLine(Renderer, 3, 0, 3, WINDOW_HEIGHT);
+	
+	}
 
 	//Update screen
 	SDL_RenderPresent(Renderer);
