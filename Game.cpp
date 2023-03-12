@@ -237,9 +237,19 @@ bool Game::Update()
 	//Enemy logic
 
 	if (iaController) {
+		Enemy.SetSpeed(4.685);
 
 		if (Ball.IsAlive()) {
-			Enemy.SetY(Ball.GetY());
+
+			if (Ball.GetY() > Enemy.GetY() + Enemy.GetHeight() / 2)
+			{
+				Enemy.SetY(Enemy.GetY() + Enemy.GetSpeed());
+			}
+			if (Ball.GetY() < Enemy.GetY() + Enemy.GetHeight() / 2)
+			{
+				Enemy.SetY(Enemy.GetY() - Enemy.GetSpeed());
+			}
+
 		}
 		else {
 			Enemy.SetY(Player.GetY());
@@ -250,6 +260,21 @@ bool Game::Update()
 		Enemy.Move();
 
 	}
+
+	// Mover la paleta de la IA
+
+	/*
+		if (ball_y < ai_y + ai_h / 2)
+		{
+			// Mover la paleta hacia arriba
+			ai_y -= ai_speed;
+		}
+		else if (ball_y > ai_y + ai_h / 2)
+		{
+			// Mover la paleta hacia abajo
+			ai_y += ai_speed;
+		}
+	*/
 
 
 	
@@ -333,7 +358,7 @@ bool Game::Update()
 		ballDirX = -ballDirX;
 
 		//Cambia la velocidad de la bola
-		ballDirX *= 1.05;
+		ballDirX *= 1.025;
 		
 		
 		
