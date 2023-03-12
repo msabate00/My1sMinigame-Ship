@@ -20,7 +20,12 @@ int hitFrameCount = 0;
 bool canShoot = true;
 bool iscollide = false;
 bool iaController = true;
+<<<<<<< Updated upstream
 int randomNumber = 100;
+=======
+int p_foto_num = 5;
+
+>>>>>>> Stashed changes
 
 bool Game::Init()
 {
@@ -57,7 +62,8 @@ bool Game::Init()
 	Player.Init(20, WINDOW_HEIGHT >> 1, 110, 100, 7);
 	idx_shot = 0;
 	idx_enemy_shot = 0;
-	Life.Init(20, 0, 104, 82, NULL);//Lin
+	Puntuacion1.Init((WINDOW_HEIGHT / 2) / 2, 20 , 104, 82, NULL);//Lin//(WINDOW_HEIGHT/2)/2
+	Puntuacion2.Init(WINDOW_HEIGHT - ((WINDOW_HEIGHT / 4) / 2), 20, 104, 82, NULL);
 	int w;
 	SDL_QueryTexture(img_background, NULL, NULL, &w, NULL);
 	Scene.Init(0, 0, w, WINDOW_HEIGHT, 4);
@@ -110,11 +116,36 @@ bool Game::LoadImages()
 		return false;
 	}
 
-	/*img_life = SDL_CreateTextureFromSurface(Renderer, IMG_Load("life.png"));
-	if (img_life == NULL) {
+	img_puntuacion5 = SDL_CreateTextureFromSurface(Renderer, IMG_Load("Numero/5.png"));
+	if (img_puntuacion5 == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
-	}*/
+	}
+	img_puntuacion4 = SDL_CreateTextureFromSurface(Renderer, IMG_Load("Numero/4.png"));
+	if (img_puntuacion5 == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
+	img_puntuacion3 = SDL_CreateTextureFromSurface(Renderer, IMG_Load("Numero/3.png"));
+	if (img_puntuacion5 == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
+	img_puntuacion2 = SDL_CreateTextureFromSurface(Renderer, IMG_Load("Numero/2.png"));
+	if (img_puntuacion5 == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
+	img_puntuacion1 = SDL_CreateTextureFromSurface(Renderer, IMG_Load("Numero/1.png"));
+	if (img_puntuacion5 == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
+	img_puntuacion0 = SDL_CreateTextureFromSurface(Renderer, IMG_Load("Numero/0.png"));
+	if (img_puntuacion5 == NULL) {
+		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
+		return false;
+	}
 
 	return true;
 }
@@ -125,8 +156,18 @@ void Game::Release()
 	SDL_DestroyTexture(img_player);
 	SDL_DestroyTexture(img_shot);
 	SDL_DestroyTexture(img_enemy);
+<<<<<<< Updated upstream
 	SDL_DestroyTexture(img_ball);
 	//SDL_DestroyTexture(img_life);
+=======
+	SDL_DestroyTexture(EnemyRect);
+	SDL_DestroyTexture(img_puntuacion5);
+	SDL_DestroyTexture(img_puntuacion4);
+	SDL_DestroyTexture(img_puntuacion3);
+	SDL_DestroyTexture(img_puntuacion2);
+	SDL_DestroyTexture(img_puntuacion1);
+	SDL_DestroyTexture(img_puntuacion0);
+>>>>>>> Stashed changes
 	IMG_Quit();
 	
 	//Clean up all SDL initialized subsystems
@@ -163,7 +204,8 @@ bool Game::Update()
 	float ex = 0, ey = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
-	if (keys[SDL_SCANCODE_J] == KEY_DOWN) vida -= 1;//Lin Si pulsa j resta vida
+	if (keys[SDL_SCANCODE_J] == KEY_DOWN) punt1 -= 1;//Lin Si pulsa j resta vida
+	if (keys[SDL_SCANCODE_K] == KEY_DOWN) punt2 -= 1;//Lin Si pulsa j resta vida
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)	fy = -1;
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)	fy = 1;
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	ey = -1;
@@ -437,7 +479,31 @@ bool Game::Update()
 		
 	}
 
-	
+
+	if (Ball.GetX() < 0) {
+		
+		if (punt2 == 0) {
+
+			punt2 = 0;
+		}
+		else {
+			punt1 -= 1;
+		}
+	}
+
+	if (Ball.GetX() > WINDOW_HEIGHT) {
+		
+		if (punt2 == 0) {
+
+			punt2 = 0;
+		}
+		else {
+			punt2 -= 1;
+		}
+
+		
+		
+	}
 		
 	return false;
 }
@@ -460,15 +526,11 @@ void Game::Draw()
 	SDL_RenderCopy(Renderer, img_background, NULL, &rc);
 	
 	//Draw player
-		//Draw player
-	if (vida <= 0) {
 	
-	}
-	else {
 		Player.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
 		SDL_RenderCopy(Renderer, img_player, NULL, &rc);
 		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
-	}
+	
 
 
 	Enemy.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
@@ -476,13 +538,62 @@ void Game::Draw()
 	if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 
 
-	//Draw Life
-	/*Life.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-	for (int i = 0; i < vida; i++)
-	{
-		SDL_RenderCopy(Renderer, img_life, NULL, &rc);
-		rc.x += rc.w;  // Move the rect to the right by its width
-	}*/
+	//Draw Puntuacion
+	Puntuacion1.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+
+	if(punt1 == 5){
+		SDL_RenderCopy(Renderer, img_puntuacion5, NULL, &rc);
+		//rc.x += rc.w;  // Move the rect to the right by its width
+	}
+	else if (punt1 == 4) {
+	
+		SDL_RenderCopy(Renderer, img_puntuacion4, NULL, &rc);
+	}
+	else if (punt1 == 3) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion3, NULL, &rc);
+	}
+	else if (punt1 == 2) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion2, NULL, &rc);
+	}
+	else if (punt1 == 1) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion1, NULL, &rc);
+	}
+	else if (punt1 == 0) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion0, NULL, &rc);
+	}
+		
+
+	Puntuacion2.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+
+	if (punt2 == 5) {
+		SDL_RenderCopy(Renderer, img_puntuacion5, NULL, &rc);
+		//rc.x += rc.w;  // Move the rect to the right by its width
+	}
+	else if (punt2 == 4) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion4, NULL, &rc);
+	}
+	else if (punt2 == 3) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion3, NULL, &rc);
+	}
+	else if (punt2 == 2) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion2, NULL, &rc);
+	}
+	else if (punt2 == 1) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion1, NULL, &rc);
+	}
+	else if (punt2 == 0) {
+
+		SDL_RenderCopy(Renderer, img_puntuacion0, NULL, &rc);
+	}
+	
 	
 	//Draw shots
 
