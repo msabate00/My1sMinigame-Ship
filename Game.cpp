@@ -271,20 +271,7 @@ bool Game::Update()
 
 	}
 
-	// Mover la paleta de la IA
 
-	/*
-		if (ball_y < ai_y + ai_h / 2)
-		{
-			// Mover la paleta hacia arriba
-			ai_y -= ai_speed;
-		}
-		else if (ball_y > ai_y + ai_h / 2)
-		{
-			// Mover la paleta hacia abajo
-			ai_y += ai_speed;
-		}
-	*/
 
 
 	
