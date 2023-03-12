@@ -49,8 +49,8 @@ private:
 
 	bool god_mode;
 
-	unsigned int punt1 = 5;
-	unsigned int punt2 = 5;
+	unsigned int punt1 = 0;
+	unsigned int punt2 = 0;
 	enum KEY_STATE { KEY_IDLE, KEY_DOWN, KEY_REPEAT, KEY_UP	};
 	KEY_STATE keys[MAX_KEYS]; 
 };

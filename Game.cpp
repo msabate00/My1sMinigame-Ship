@@ -199,8 +199,8 @@ bool Game::Update()
 	float ex = 0, ey = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
-	if (keys[SDL_SCANCODE_J] == KEY_DOWN) punt1 -= 1;//Lin Si pulsa j resta vida
-	if (keys[SDL_SCANCODE_K] == KEY_DOWN) punt2 -= 1;//Lin Si pulsa j resta vida
+	if (keys[SDL_SCANCODE_J] == KEY_DOWN) punt1 += 1;//Lin Si pulsa j resta vida
+	if (keys[SDL_SCANCODE_K] == KEY_DOWN) punt2 += 1;//Lin Si pulsa j resta vida
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)	fy = -1;
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)	fy = 1;
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	ey = -1;
@@ -445,7 +445,35 @@ bool Game::Update()
 
 
 		//Si se sale por los lados, resetea la bola
-		if (Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) {
+		if ((Ball.GetX() < 0 || Ball.GetX() > WINDOW_WIDTH) && Ball.IsAlive()) {
+
+
+			if (Ball.GetX() < 0) {
+
+				if (punt2 == 5) {
+
+					punt1 = 0;
+					punt2 = 0;
+				}
+				else {
+					punt2 += 1;
+				}
+			}
+
+			if (Ball.GetX() > WINDOW_WIDTH) {
+
+				if (punt1 == 5) {
+
+					punt1 = 0;
+					punt2 = 0;
+				}
+				else {
+					punt1 += 1;
+				}
+			}
+
+
+
 
 			if (!god_mode) {
 				Ball.ShutDown();
@@ -474,31 +502,7 @@ bool Game::Update()
 		
 	}
 
-
-	if (Ball.GetX() < 0) {
-		
-		if (punt2 == 0) {
-
-			punt2 = 0;
-		}
-		else {
-			punt1 -= 1;
-		}
-	}
-
-	if (Ball.GetX() > WINDOW_HEIGHT) {
-		
-		if (punt2 == 0) {
-
-			punt2 = 0;
-		}
-		else {
-			punt2 -= 1;
-		}
-
-		
-		
-	}
+	
 		
 	return false;
 }
@@ -535,6 +539,8 @@ void Game::Draw()
 
 	//Draw Puntuacion
 	Puntuacion1.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
+	
+
 
 	if(punt1 == 5){
 		SDL_RenderCopy(Renderer, img_puntuacion5, NULL, &rc);
