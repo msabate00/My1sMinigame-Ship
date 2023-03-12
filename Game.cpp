@@ -104,8 +104,8 @@ bool Game::LoadImages()
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
-	EnemyRect = SDL_CreateTextureFromSurface(Renderer, IMG_Load("ball.png"));
-	if (EnemyRect == NULL) {
+	img_ball = SDL_CreateTextureFromSurface(Renderer, IMG_Load("ball_2.png"));
+	if (img_ball == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
@@ -125,7 +125,7 @@ void Game::Release()
 	SDL_DestroyTexture(img_player);
 	SDL_DestroyTexture(img_shot);
 	SDL_DestroyTexture(img_enemy);
-	SDL_DestroyTexture(EnemyRect);
+	SDL_DestroyTexture(img_ball);
 	//SDL_DestroyTexture(img_life);
 	IMG_Quit();
 	
@@ -178,7 +178,7 @@ bool Game::Update()
 		//size: 56x20
 		//offset from player: dx, dy = [(29, 3), (29, 59)]
 		
-		Ball.Init(x+Player.GetWidth() , y + (Player.GetHeight()/2)-15 , 30, 30, 6);
+		Ball.Init(x+Player.GetWidth() , y + (Player.GetHeight()/2)-15 , 40, 40, 6);
 		//idx_shot++;
 		//idx_shot %= MAX_SHOTS;
 		canShoot = false;
@@ -350,7 +350,7 @@ bool Game::Update()
 		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
 
-			randomNumber = rand() % 101;
+			
 
 			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
 
@@ -362,6 +362,7 @@ bool Game::Update()
 		//Colision jugador
 		if (SDL_HasIntersection(&BallRect, &PlayerRect)) {
 
+			randomNumber = rand() % 101;
 
 			if ((Ball.GetY() + (Ball.GetHeight() / 2)) < (Player.GetY() + (Player.GetHeight() / 2))) {
 				ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
@@ -488,7 +489,7 @@ void Game::Draw()
 
 	if (Ball.IsAlive()) {
 		Ball.GetRect(&rc.x, &rc.y, &rc.w, &rc.h);
-		SDL_RenderCopy(Renderer, EnemyRect, NULL, &rc);
+		SDL_RenderCopy(Renderer, img_ball, NULL, &rc);
 		if (god_mode) SDL_RenderDrawRect(Renderer, &rc);
 	}
 	
