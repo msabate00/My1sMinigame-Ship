@@ -20,12 +20,8 @@ int hitFrameCount = 0;
 bool canShoot = true;
 bool iscollide = false;
 bool iaController = true;
-<<<<<<< Updated upstream
 int randomNumber = 100;
-=======
 int p_foto_num = 5;
-
->>>>>>> Stashed changes
 
 bool Game::Init()
 {
@@ -156,18 +152,17 @@ void Game::Release()
 	SDL_DestroyTexture(img_player);
 	SDL_DestroyTexture(img_shot);
 	SDL_DestroyTexture(img_enemy);
-<<<<<<< Updated upstream
+
 	SDL_DestroyTexture(img_ball);
 	//SDL_DestroyTexture(img_life);
-=======
-	SDL_DestroyTexture(EnemyRect);
+
 	SDL_DestroyTexture(img_puntuacion5);
 	SDL_DestroyTexture(img_puntuacion4);
 	SDL_DestroyTexture(img_puntuacion3);
 	SDL_DestroyTexture(img_puntuacion2);
 	SDL_DestroyTexture(img_puntuacion1);
 	SDL_DestroyTexture(img_puntuacion0);
->>>>>>> Stashed changes
+
 	IMG_Quit();
 	
 	//Clean up all SDL initialized subsystems

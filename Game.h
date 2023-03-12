@@ -34,17 +34,15 @@ public:
 private:
 	SDL_Window *Window;
 	SDL_Renderer *Renderer;
-<<<<<<< Updated upstream
-	SDL_Texture *img_background = nullptr, *img_player = nullptr, *img_shot = nullptr, *img_ball = nullptr, *img_enemy = nullptr, *img_life = nullptr;
-=======
-	SDL_Texture *img_background = nullptr, *img_player = nullptr, *img_shot = nullptr, *EnemyRect = nullptr, *img_enemy = nullptr, 
+
+	SDL_Texture *img_background = nullptr, *img_player = nullptr, *img_shot = nullptr, *img_ball = nullptr, *img_enemy = nullptr,
 		* img_puntuacion5 = nullptr,
 		* img_puntuacion4 = nullptr,
 		* img_puntuacion3 = nullptr,
 		* img_puntuacion2 = nullptr,
 		* img_puntuacion1 = nullptr,
 		* img_puntuacion0 = nullptr;
->>>>>>> Stashed changes
+
 
 	Entity Player, Shots[MAX_SHOTS], Scene, Enemy, Ball, Puntuacion1, Puntuacion2, EnemyShoot[MAX_SHOTS];
 	int idx_shot, idx_enemy_shot;
