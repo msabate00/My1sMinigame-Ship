@@ -63,7 +63,7 @@ bool Game::Init()
 
 	
 	//Enemigos
-	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 104, 7);
+	Enemy.Init(WINDOW_WIDTH - 124, WINDOW_HEIGHT / 2, 104, 82, 7);
 
 	// BACKGROUND MUSIC
 	int flags = MIX_INIT_OGG;
