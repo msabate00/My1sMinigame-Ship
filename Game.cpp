@@ -7,6 +7,8 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+
+
 Game::Game() {}
 Game::~Game(){}
 
@@ -16,6 +18,8 @@ float ballDirX = 1, ballDirY = 1;
 int hitFrameCount = 0;
 bool canShoot = true;
 bool iscollide = false;
+bool iaController = true;
+
 
 bool Game::Init()
 {
@@ -25,7 +29,7 @@ bool Game::Init()
 		return false;
 	}
 	//Create our window: title, x, y, w, h, flags
-	Window = SDL_CreateWindow("Spaceship: arrow keys + space, f1: god mode", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+	Window = SDL_CreateWindow("Spaceship: arrow keys + space, f1: god mode, R: Change to PvP or PVE", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 	if (Window == NULL)
 	{
 		SDL_Log("Unable to create window: %s", SDL_GetError());
@@ -154,11 +158,15 @@ bool Game::Update()
 
 	//Process Input
 	float fx = 0, fy = 0;
+	float ex = 0, ey = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
 	if (keys[SDL_SCANCODE_J] == KEY_DOWN) vida -= 1;//Lin Si pulsa j resta vida
-	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	fy = -1;
-	if (keys[SDL_SCANCODE_DOWN] == KEY_REPEAT)	fy = 1;
+	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)	fy = -1;
+	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)	fy = 1;
+	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	ey = -1;
+	if (keys[SDL_SCANCODE_DOWN] == KEY_REPEAT)	ey = 1;
+	if (keys[SDL_SCANCODE_R] == KEY_DOWN)	iaController = !iaController;
 	//if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)	fx = -1;
 	//if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)	fx = 1;
 	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN && canShoot)
@@ -207,31 +215,7 @@ bool Game::Update()
 				printf("Error al cargar el sonido: %s\n", Mix_GetError());
 			}
 		}
-		//Mix_PlayMusic(musica, -1);
 		
-		
-		/*if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-			printf("Error al inicializar SDL_mixer: %s\n", Mix_GetError());
-			exit(1);
-		}
-		
-		Mix_Music* musica = Mix_LoadMUS("Game\assets\stage1.ogg");
-		Mix_PlayMusic(musica, -1); // Reproduce la musica en un loop infinito
-		Mix_VolumeMusic(128);
-		Mix_Chunk* efecto = Mix_LoadWAV("Game/assets/laser.wav");
-		//SDL_Delay(5000);
-		*/
-		//if (musica == NULL) {
-			//printf("Error al cargar la m sica: %s\n", Mix_GetError());
-			
-			
-			
-			
-			//Mix_PlayChannel(-1, efecto, 0); // Reproduce el efecto una vez	
-			//Mix_FreeMusic(musica);
-			//Mix_FreeChunk(efecto);
-			//Mix_CloseAudio();
-		//}
 	}
 
 	//Logic
@@ -250,41 +234,21 @@ bool Game::Update()
 		Player.SetY(WINDOW_HEIGHT - Player.GetHeight());
 	}
 
-	//Shots update
-	/* EN PRINCIPIO NO HACE FALTA
-	for (int i = 0; i < MAX_SHOTS; ++i)
-	{
-		if (Shots[i].IsAlive())
-		{
-			Shots[i].Move(1, 0);
-			if (Shots[i].GetX() > WINDOW_WIDTH || Shots[i].GetX() < 0) {
-				canShoot = true;
-				Shots[i].ShutDown();
-			}
+	//Enemy logic
+
+	if (iaController) {
+
+		if (Ball.IsAlive()) {
+			Enemy.SetY(Ball.GetY());
+		}
+		else {
+			Enemy.SetY(Player.GetY());
 		}
 	}
-	*/
-	//Enemy logic
-	/*
-	if (Enemy.GetY() + Enemy.GetHeight() >= WINDOW_HEIGHT && enemyMoveUp == true ) {
-		enemyMoveUp = false;
-	}
-	else if(Enemy.GetY() <= 0 && enemyMoveUp == false){
-		enemyMoveUp = true;
-	}
-	if (enemyMoveUp) {
-		//Enemy.Move(0, 1);
-	}
 	else {
-		//Enemy.Move(0, -1);
-	}
-	Enemy.SetDir(0, 0);
-	Enemy.Move();*/
-	if (Ball.IsAlive()) {
-		Enemy.SetY(Ball.GetY());
-	}
-	else {
-		Enemy.SetY(Player.GetY());
+		Enemy.SetDir(ex, ey);
+		Enemy.Move();
+
 	}
 
 
@@ -345,8 +309,6 @@ bool Game::Update()
 			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
 				ballDirY = -ballDirY;
 			}
-			//Ball.GetY() + Enemy.GetY() == 100;
-
 		}
 		
 		//Colision jugador
@@ -360,25 +322,8 @@ bool Game::Update()
 				ballDirY = -((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 2) / (Ball.GetY() + Player.GetY());
 			}
 
-			//ballDirY = (Player.GetY()+(Player.GetHeight() / 2)) - (Ball.GetY() +(Ball.GetHeight() / 2));
-			/*ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Player.GetY() + (Player.GetHeight() / 2)) * 1) / (Ball.GetY() + Player.GetY());
-			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Player.GetY() + (Player.GetHeight() / 2)) {
-				ballDirY = -ballDirY;
-			}*/
-	
 		}
 
-		//PUNTO MEDIO JUGADOR
-		//(Player.GetY() + (Player.GetHeight() / 2))
-
-		//PUNTO MEDIO PELOTA
-		//(Ball.GetY() + (Ball.GetHeight() / 2))
-
-		
-
-
-
-		
 		if (ballDirY > 1) ballDirY = 1;
 		if (ballDirY < -1) ballDirY = -1;
 		
@@ -402,9 +347,7 @@ bool Game::Update()
 		
 
 		//Si se sale por arriba o por abajo, invierte la velocidad vertical
-		/*if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT) || (Ball.GetY() + Ball.GetHeight() < 0)) {
-			ballDirY = -ballDirY;
-		}*/
+		
 		if ((Ball.GetY() + Ball.GetHeight() > WINDOW_HEIGHT)) {
 			Ball.SetY(WINDOW_HEIGHT - Ball.GetHeight());
 			ballDirY = -abs(ballDirY);
@@ -431,36 +374,6 @@ bool Game::Update()
 
 		
 	}
-
-	//ESTO HACE QUE EL ENEMIGO DISPARE, PARA EL PONG NO HACE FALTA
-	/*for (int i = 0; i < MAX_SHOTS; ++i)
-	{
-		if (EnemyShoot[i].IsAlive())
-		{
-			EnemyShoot[i].Move(-1, 0);
-			if (EnemyShoot[i].GetX() > WINDOW_WIDTH)	Shots[i].ShutDown();
-		}
-	}
-
-	if (framecount % 100 == 0) {
-		int x, y, w, h;
-		Enemy.GetRect(&x, &y, &w, &h);
-		EnemyShoot[idx_enemy_shot].Init(x - 29, y, 56, 20, 10);
-		idx_enemy_shot++;
-		idx_enemy_shot %= MAX_SHOTS;
-	}
-	idx_enemy_shot = 0;
-	*/
-	/*for (int i = 0; i < MAX_SHOTS; i++) {
-		if (Player.Collide(EnemyShoot[idx_enemy_shot])) {
-			
-		}
-		idx_enemy_shot++;
-	}*/
-	
-	
-
-	
 
 	
 		
@@ -544,4 +457,6 @@ void Game::Draw()
 
 	SDL_Delay(10);	// 1000/10 = 100 fps max
 }
+
+
 

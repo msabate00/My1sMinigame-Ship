@@ -30,6 +30,7 @@ public:
 	bool Update();
 	void Draw();
 
+
 private:
 	SDL_Window *Window;
 	SDL_Renderer *Renderer;
