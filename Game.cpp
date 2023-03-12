@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <math.h>
 #include <cmath>
+#include <time.h> 
 #include <stdio.h>
 #include "SDL_mixer/include/SDL_mixer.h"
 
@@ -19,10 +20,11 @@ int hitFrameCount = 0;
 bool canShoot = true;
 bool iscollide = false;
 bool iaController = true;
-
+int randomNumber = 100;
 
 bool Game::Init()
 {
+	srand(time(0));
 	//Initialize SDL with all subsystems
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
@@ -69,7 +71,7 @@ bool Game::Init()
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-	Mix_Music* musica = Mix_LoadMUS("assets/Mozart.ogg");
+	Mix_Music* musica = Mix_LoadMUS("assets/StarWars_Fondo.ogg");
 	Mix_PlayMusic(musica, -1);
 
 	return true;
@@ -86,7 +88,7 @@ bool Game::LoadImages()
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
 	}
-	img_player = SDL_CreateTextureFromSurface(Renderer, IMG_Load("spaceship_2.png"));
+	img_player = SDL_CreateTextureFromSurface(Renderer, IMG_Load("spaceship_3.png"));
 	if (img_player == NULL) {
 		SDL_Log("CreateTextureFromSurface failed: %s\n", SDL_GetError());
 		return false;
@@ -238,10 +240,31 @@ bool Game::Update()
 
 	//Si es controlado por la IA
 	if (iaController) {
-		Enemy.SetSpeed(4.685);
+		//Enemy.SetSpeed(4.685);
 
 		if (Ball.IsAlive()) {
 
+			
+			if (randomNumber < 5) {
+				//Deberia de fallar
+
+				if (randomNumber < 2) {
+					Enemy.SetY(Ball.GetY() - Enemy.GetHeight());
+				}
+				else {
+					Enemy.SetY(Ball.GetY() + Ball.GetHeight() + Enemy.GetHeight());
+				}
+				
+				
+			}
+			else {
+
+				//Deberia de darle
+				Enemy.SetY(Ball.GetY() + Ball.GetHeight() / 2);
+			}
+			//Enemy.SetY(Ball.GetY() + randomNumber + Ball.GetHeight() / 2);
+
+			/*
 			if (Ball.GetY() > Enemy.GetY() + Enemy.GetHeight() / 2)
 			{
 				Enemy.SetY(Enemy.GetY() + Enemy.GetSpeed());
@@ -249,7 +272,7 @@ bool Game::Update()
 			if (Ball.GetY() < Enemy.GetY() + Enemy.GetHeight() / 2)
 			{
 				Enemy.SetY(Enemy.GetY() - Enemy.GetSpeed());
-			}
+			}*/
 
 		}
 		else {
@@ -308,6 +331,8 @@ bool Game::Update()
 	//Colision con jugador y enemigo
 	if ((SDL_HasIntersection(&BallRect, &EnemyRect) || SDL_HasIntersection(&BallRect, &PlayerRect)) && hitFrameCount > 20 ) {
 		
+		
+
 		// EFECTO AL CHOCAR BOLA CON JUGADOR/ENEMIGO
 		Mix_Chunk* sonido = Mix_LoadWAV("assets/Sonido_Bola.wav");
 		if (sonido == NULL)
@@ -324,9 +349,10 @@ bool Game::Update()
 
 		//Colision enemigo
 		if (SDL_HasIntersection(&BallRect, &EnemyRect)) {
-			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
 
-			
+			randomNumber = rand() % 101;
+
+			ballDirY = ((Ball.GetY() + (Ball.GetHeight() / 2)) - (Enemy.GetY() + (Enemy.GetHeight() / 2)) * 2) / (Ball.GetY() + Enemy.GetY());
 
 			if (Ball.GetY() + (Ball.GetHeight() / 2) >= Enemy.GetY() + (Enemy.GetHeight() / 2)) {
 				ballDirY = -ballDirY;
@@ -388,6 +414,7 @@ bool Game::Update()
 				canShoot = true;
 				ballDirX = 1;
 				ballDirY = 1;
+				randomNumber = rand() % 101;
 			}
 			else {
 				ballDirX = -ballDirX;
