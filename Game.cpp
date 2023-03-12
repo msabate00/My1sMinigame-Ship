@@ -199,8 +199,8 @@ bool Game::Update()
 	float ex = 0, ey = 0;
 	if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN)	return true;
 	if (keys[SDL_SCANCODE_F1] == KEY_DOWN)		god_mode = !god_mode;
-	if (keys[SDL_SCANCODE_J] == KEY_DOWN) punt1 += 1;//Lin Si pulsa j resta vida
-	if (keys[SDL_SCANCODE_K] == KEY_DOWN) punt2 += 1;//Lin Si pulsa j resta vida
+	//if (keys[SDL_SCANCODE_J] == KEY_DOWN) punt1 += 1;//Lin Si pulsa j resta vida
+	//if (keys[SDL_SCANCODE_K] == KEY_DOWN) punt2 += 1;//Lin Si pulsa j resta vida
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)	fy = -1;
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)	fy = 1;
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)	ey = -1;
