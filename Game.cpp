@@ -472,7 +472,19 @@ bool Game::Update()
 				}
 			}
 
-
+			// EFECTO AL CHOCAR BOLA CON JUGADOR/ENEMIGO
+			Mix_Chunk* sonido = Mix_LoadWAV("assets/explosion_2.wav");
+			if (sonido == NULL)
+			{
+				printf("Error al cargar el sonido: %s\n", Mix_GetError());
+			}
+			else
+			{
+				if (Mix_PlayChannel(-1, sonido, 0) < 0)
+				{
+					printf("Error al cargar el sonido: %s\n", Mix_GetError());
+				}
+			}
 
 
 			if (!god_mode) {
