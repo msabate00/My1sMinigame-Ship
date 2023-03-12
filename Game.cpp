@@ -69,7 +69,7 @@ bool Game::Init()
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-	Mix_Music* musica = Mix_LoadMUS("assets/Mozart.ogg");
+	Mix_Music* musica = Mix_LoadMUS("assets/StarWars_Fondo.ogg");
 	Mix_PlayMusic(musica, -1);
 
 	return true;
